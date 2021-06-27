@@ -18,7 +18,6 @@
 bool is_alt_tab_active = false;
 uint16_t alt_tab_timer = 0;
 
-char wpm_str[10];
 
 enum layers {
     _QWERTY,
@@ -33,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Base Layer: QWERTY
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |RAIS/ESC|   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |  BKSP  |
+ * |RAIS/ESC|   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |  = +   |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |Tab     |   A  |   S  |  D   |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |  ' "   |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
@@ -44,13 +43,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
-      KC_ESC,    KC_Q,    KC_W,   KC_E,   KC_R,   KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,       KC_P, KC_BSPC,
-      KC_TAB,    KC_A,    KC_S,   KC_D,   KC_F,   KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-      KC_LCTL,   KC_Z,    KC_X,   KC_C,   KC_V,   KC_B,    KC_ENT,  KC_LCTL,       KC_RCTL, _______,     KC_N,    KC_M,   KC_COMM,  KC_DOT,  KC_SLSH, KC_MINS,
-                                 TG(1), KC_LALT, KC_LGUI, KC_LSFT,  KC_BSPC,      LT(3, KC_ENT), LT(2, KC_SPC), KC_RGUI,  KC_RALT, TG(2)
+      KC_ESC,    KC_Q,    KC_W,   KC_E,   KC_R,   KC_T,                                                                        KC_Y,    KC_U,    KC_I,    KC_O,      KC_P,  KC_EQL,
+      KC_TAB,    KC_A,    KC_S,   KC_D,   KC_F,   KC_G,                                                                        KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,  KC_QUOT,
+     KC_LCTL,    KC_Z,    KC_X,   KC_C,   KC_V,   KC_B,   KC_LCTL,   KC_DEL,                       LT(3,KC_RSFT),  _______,    KC_N,    KC_M, KC_COMM,  KC_DOT,  KC_SLSH, KC_MINS,
+                         TG(1), KC_LALT, KC_LGUI, LSFT_T(KC_BSPC),  KC_BSPC,                       LT(2, KC_ENT), LT(2, KC_SPC), KC_RCTL, KC_RSFT, TG(2)
     ),
 /*
- * This layer exists to change encoder functions.
+ * Trying this because I'm scared
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
  * |        |      |      |      |      |      |                              |      |      |      |      |      |        |
@@ -64,30 +63,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_2WERTY] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                                 KC_TRNS, _______, _______, _______, _______, _______, _______, _______, _______, _______
+      KC_ESC,    KC_Q,    KC_W,   KC_E,   KC_R,   KC_T,                                                                        KC_Y,    KC_U,    KC_I,    KC_O,      KC_P,  KC_EQL,
+      KC_TAB,    KC_A,    KC_S,   KC_D,   KC_F,   KC_G,                                                                        KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,  KC_QUOT,
+     KC_LCTL,    KC_Z,    KC_X,   KC_C,   KC_V,   KC_B,   KC_LCTL,   KC_DEL,                       LT(3,KC_RSFT),  _______,    KC_N,    KC_M, KC_COMM,  KC_DOT,  KC_SLSH, KC_MINS,
+                         TG(2), KC_LALT, KC_LGUI, LSFT_T(KC_BSPC),  KC_BSPC,                       LT(2, KC_ENT), LT(2, KC_SPC), KC_RCTL, KC_RSFT, TG(1)
     ),
 /*
  * Lower Layer: numpad and arrow
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |   7  |   8  |  9   |  0   |                              | PGUP |      |  UP  |      |      |   Del
-   |
+ * |   `~   |      | 7/&  | 8*   |  9/( |  0/) |                              | PGUP | HOME |  Up  | END  |  [{  |   ]}   |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * | CAPS   |      |   4  |   5  |  6   | Tab  |                              | PGDN | Left | Down | Right|      |        |
+ * |        | TAB  |  4/$ | 5/%  |  6/^ | Tab  |                              | PGDN | Left | Down | Right| '/"  |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |   1  |  2   |  3   | Ent  |      |      |  |      |      |      | LBRC | RBRC |      |   |\ |  +=    |
+ * |        |   0  | 1/!  | 2/@  | 3/#  | Ent  |      |      |  |      |      |  [{  |  }]  |      |      |  |\  |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      | Tab  | Ent  |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
      [_LOWER] = LAYOUT(
-        _______, _______,    KC_7,    KC_8,    KC_9,    KC_0,                                            KC_PGUP, _______,   KC_UP, _______, _______,  KC_DEL,
-        KC_CAPS, _______,    KC_4,    KC_5,    KC_6,  KC_TAB,                                            KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______,
-        KC_LSFT,    KC_0,    KC_1,    KC_2,    KC_3,  KC_ENT,   KC_TRNS,  KC_TRNS,       MO(4), _______, KC_LBRC, KC_RBRC, _______, _______, KC_BSLS,  KC_EQL,
+        KC_GRV,  _______,    KC_7,    KC_8,    KC_9,    KC_0,                                            KC_PGUP, KC_HOME,   KC_UP,  KC_END, KC_LBRC,  KC_RBRC,
+        KC_TRNS,  KC_TAB,    KC_4,    KC_5,    KC_6,  KC_TAB,                                             KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______,
+        KC_LSFT,    KC_0,    KC_1,    KC_2,    KC_3,  KC_ENT,   KC_TRNS,  KC_TRNS,       MO(4), _______, _______, _______, _______, _______, KC_BSLS,  _______,
                                    KC_TRNS,    KC_TAB,  KC_ENT, KC_TRNS,  KC_TRNS,     KC_TRNS, KC_TRNS, _______, _______, _______
     ),
 /*
@@ -114,9 +112,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Adjust Layer: Function keys, RGB
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        | F1   |  F2  | F3   | F4   | F5   |                              | F6   | F7   |  F8  | F9   | F10  |        |
+ * | Sleep  | F1   |  F2  | F3   | F4   | F5   |                              | F6   | F7   |  F8  | F9   | F10  |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        | VAI  | SAI  | HUI  | SPI  | MOD  |                              |      |      |      | F11  | F12  |        |
+ * | RGBTOG | VAI  | SAI  | HUI  | SPI  | MOD  |                              |      |      |      | F11  | F12  |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * |        | VID  | SAD  | HUD  | SPD  | RMOD |      |      |  |      |      |      |      |      |      |      |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
@@ -125,9 +123,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ADJUST] = LAYOUT(
-      _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
+      KC_SLEP, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                         KC_F6,   KC_F7,   KC_F8,   KC_F9, KC_F10,  _______,
       RGB_TOG, RGB_VAI, RGB_SAI, RGB_HUI, RGB_SPI, RGB_MOD,                                     _______, _______, _______, KC_F11,  KC_F12,  _______,
-      _______, RGB_VAD, RGB_SAD, RGB_HUD, RGB_SPD, RGB_RMOD,_______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+      RGB_M_P, RGB_VAD, RGB_SAD, RGB_HUD, RGB_SPD, RGB_RMOD,_______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                                  KC_TRNS, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 // /*
@@ -187,7 +185,7 @@ static void render_status(void) {
 
     //Host Keyboard LED Status
     led_t led_state = host_keyboard_led_state();
-    oled_write_P(led_state.num_lock ? PSTR("NUM ") : PSTR("       "), false);
+    oled_write_P(led_state.num_lock ? PSTR(" NUM ") : PSTR("       "), false);
     oled_write_P(led_state.caps_lock ? PSTR("CAPS ") : PSTR("       "), false);
     oled_write_P(led_state.scroll_lock ? PSTR("SCRL") : PSTR("       "), false);
 }
@@ -202,8 +200,8 @@ static void render_status(void) {
 #define TAP_FRAMES 2
 #define TAP_SPEED 60 // above this wpm value typing animation to triggere
 
+//#define ANIM_FRAME_DURATION (200 - 180*((get_current_wpm()-TAP_SPEED)/(get_current_wpm()+10))) // how long each frame lasts in ms
 #define ANIM_FRAME_DURATION 200 // how long each frame lasts in ms
-// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
 #define ANIM_SIZE 636 // number of bytes in array, minimize for adequate firmware size, max is 1024
 
 uint32_t anim_timer = 0;
@@ -311,24 +309,37 @@ static void render_anim(void) {
     }
 }
 
-// static void render_skull(void) { // Helen Tseong (http://shewolfe.co/), the original artist behind the skull, sadly only allowing use of the skull for my personal use. Her (excellent) works are copyright her, and I claim no ownership. Reach out to her for permission!
-//     static const char PROGMEM skull[] = {
-//     };
-//      oled_write_raw_P(skull, 801);
-//  }
+static void render_skull(void) { // Helen Tseong (http://shewolfe.co/), the original artist behind the skull, sadly only allowed my personal use. Her (excellent) works are copyright her and I claim no ownership of them.
+    static const char PROGMEM skull[] = {
+        0,  0,  0,  0,  0,  0,  0,128,192,224,240,248,252,252,254,254,254,255,127,223,247,251,255,255,255,255,255,255,255,255,254,254,254,252,252,248,248,240,240,160, 64,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,240,252,  4,  2,130, 62,114,224,204,190,154,  0,128,224, 32,240,224,  0, 64,240,254, 64, 64,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0,  0,192,240,248,238,247,239,247,255,239,255,223,255,255,255,255,243,255,255,255,255,127,255,191,223,191,223,191, 95,191,127,255,255,255,255,255,255,255,255,255,255,238,184,224,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,128,128,128,131, 15, 14, 28, 25, 18,146, 27,  8,  7,  3,128,143, 31, 29,  8,  8,  0,  8,143,159, 24,  8,  0,  0,  0,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0,160, 83,135, 67,  1,  0,  0,  0,  0,  1,  1,  3, 15,255,255,237,119,255,255, 95,175,  7,  3,  3,  3,  3,  3,  7,  7, 15, 31, 62,253,255,255,255,175,255,127,255,251,247,239,247,239,206,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 56,198,129, 25, 36,101,105, 97,115, 51, 59, 25, 17,224,  0,  1,254,255, 16, 16,120,240,224,  0, 32, 16,251,249, 16,  0,  0, 16,252,255, 16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0, 28,255, 94, 61,122,252,250,252,248, 12,220, 62,119,223,245,234,245,255,255,253,250,244,232,240,224,208,224,192,224,224,240,240,252,127, 31, 47, 83,168,245,255,255,255,255,255, 31,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,192,192, 96, 97,227, 99,102,102,198,198,134,  2,  3,  1,  0,  0,  2,  3,  7,  6,  2, 24, 15,  3,  0,  0,  0,  3,  7,  6,  2,  0,  2,  3,  7,  6,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0,  0,  0,224,251,124,254,127,255,245,240,224,225,224,225,231,239,255,255,250,255,251,255,247,255,127, 63, 31, 31, 47, 91,255,253,254,108, 22,170,223,247,127, 63, 31,  7,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  3,  4,132,192, 88,227,231,158,136,  0,  0,129,195, 62,  0,128,252,252,130,134,126, 60,  0,  4,134,254,252,132,  2,254,254,132,128,  0,248,254,210,143,142,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0,  0,  0,  0,141,124,251,193,247,145,239,226, 31,239,129,239, 47,241,207,111,130,247,243,160,251,240,228,244,242,248,253,255, 31,  3,  0,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  1,  1,  0,  0,  0,  0,  0,  0,  1,  1,  0,  0,  0,  1,  1,  0,  0,  0,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0,  0,  0,  6, 15, 15, 31, 31, 63, 62, 63,127,127,127,127,127,125,127,127, 95, 31, 31, 59, 59, 31, 31, 31, 15, 15,  7,  7,  1
+    };
+     oled_write_raw_P(skull, 801);
+ }
 
 void oled_task_user(void) {
     if (is_keyboard_master()) {
-        //render_skull();
-        //oled_set_cursor(7,6);
+        render_skull();
+        oled_set_cursor(7,6);
         render_status();
      // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_anim();
+        uint8_t n = get_current_wpm();
+        char wpm_counter[4];
+        wpm_counter[3] = '\0';
+        wpm_counter[2] = '0' + n % 10;
+        wpm_counter[1] = ( n /= 10) % 10 ? '0' + (n) % 10 : (n / 10) % 10 ? '0' : ' ';
+        wpm_counter[0] = n / 10 ? '0' + n / 10 : ' ';
+        //sprintf(wpm_str, "       WPM: %03d", get_current_wpm());
         oled_set_cursor(0,6);
-        sprintf(wpm_str, "       WPM: %03d", get_current_wpm());
-        oled_write(wpm_str, false);
-
+        oled_write("       WPM:", false);
+        oled_write(wpm_counter, false);
     }
 }
 #endif
@@ -358,10 +369,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     }
     return true;
 }
-
 void matrix_scan_user(void) {
     if (is_alt_tab_active) {
-        if (timer_elapsed(alt_tab_timer) > 1250) {
+        if (timer_elapsed(alt_tab_timer) > 750) {
             unregister_code(KC_LALT);
             is_alt_tab_active = false;
             }
