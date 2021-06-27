@@ -16,3 +16,6 @@ KEY_LOCK_ENABLE = no
 AUDIO_ENABLE = no
 CONSOLE_ENABLE = no
 VELOCIKEY_ENABLE = no
+
+# Bootloader selection
+BOOTLOADER = atmel-dfu
